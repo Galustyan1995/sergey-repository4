@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: shared-data
+          mountPath: /usr/share/nginx/html
+      - name: php-fpm
+        image: php:fpm
+        volumeMounts:
+        - name: shared-data
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: shared-data
+        emptyDir: {}
